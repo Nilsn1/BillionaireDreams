@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="fontFamily">@font/rohnroundedheavy</item>
+    </style>
+
+    <style name="navigationTheme">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/poppins_medium</item>
+    </style>
+
+</resources>

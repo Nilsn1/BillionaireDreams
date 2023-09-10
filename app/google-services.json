@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "320543954797",
+    "project_id": "billionaire-dreams-6ac7d",
+    "storage_bucket": "billionaire-dreams-6ac7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320543954797:android:22b64e101f8663ad9f6c64",
+        "android_client_info": {
+          "package_name": "com.nilscreation.billionairedreams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320543954797-72dvr9fhqgjm0428ra02lsl1dkg7g7pr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_TbyMmmip8RnkG5zK1MoBhXGPeP0eY6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320543954797-72dvr9fhqgjm0428ra02lsl1dkg7g7pr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
