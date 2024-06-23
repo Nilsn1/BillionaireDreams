@@ -14,6 +14,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+//import com.google.android.gms.ads.AdRequest;
+//import com.google.android.gms.ads.FullScreenContentCallback;
+//import com.google.android.gms.ads.LoadAdError;
+//import com.google.android.gms.ads.interstitial.InterstitialAd;
+//import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -22,14 +27,15 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.nilscreation.billionairedreams.model.QuoteModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuoteAdapter extends RecyclerView.Adapter<QuoteAdapter.viewholder> {
     Context context;
-    ArrayList<QuoteModel> quotelist;
+    List<QuoteModel> quotelist;
     int mCounter = 0;
     private InterstitialAd mInterstitialAd;
 
-    public QuoteAdapter(Context context, ArrayList<QuoteModel> quotelist) {
+    public QuoteAdapter(Context context, List<QuoteModel> quotelist) {
         this.context = context;
         this.quotelist = quotelist;
     }
@@ -53,6 +59,7 @@ public class QuoteAdapter extends RecyclerView.Adapter<QuoteAdapter.viewholder> 
 
                 Bundle bundle = new Bundle();
                 bundle.putString("url", quote.getUrl());
+//                bundle.putString("title", quote.getTitle());
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtras(bundle);
                 context.startActivity(intent);

@@ -1,38 +1,58 @@
 package com.nilscreation.billionairedreams;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.Manifest;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.TextView;
-
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
-
     TextView toolbarTitle;
+    private static final int NOTIFICATION_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
+            } else {
+                // Permission already granted, proceed with notification functionality
+            }
+        }
 
         drawerLayout = findViewById(R.id.drawerlayout);
         navigationView = findViewById(R.id.navigationview);
@@ -86,6 +106,28 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getSupportFragmentManager();
+                Fragment fragInstance = fm.findFragmentById(R.id.container);
+
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    if (fragInstance instanceof AboutFragment) {
+                        loadFragment(new MainFragment());
+                        toolbarTitle.setText("Billionaire Dreams");
+                    } else {
+                        exitDialog();
+                    }
+                }
+
+            }
+        };
+
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -93,6 +135,18 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.container, fragment);
         ft.commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with notification functionality
+            } else {
+                // Permission denied, handle the case
+            }
+        }
     }
 
     private void exitDialog() {
@@ -115,23 +169,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragInstance = fm.findFragmentById(R.id.container);
-
-
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if (fragInstance instanceof AboutFragment) {
-                loadFragment(new MainFragment());
-                toolbarTitle.setText("Billionaire Dreams");
-            } else {
-                exitDialog();
-            }
-        }
     }
 }

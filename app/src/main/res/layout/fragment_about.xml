@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
-                    android:text="Version 1.1"
+                    android:text="Version 1.2"
                     android:textColor="@color/primary_text"
                     android:textSize="15sp" />
 
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
-                    android:text="If you have any query regarding this app or want to give any suggeston or report, Please contact us."
+                    android:text="@string/contact"
                     android:textColor="@color/primary_text"
                     android:textSize="15sp" />
 

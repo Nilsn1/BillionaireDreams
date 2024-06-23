@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.NewDemo" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BillionaireDreams" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
@@ -12,15 +12,15 @@
 
         <item name="colorSecondaryContainer">@color/card_background</item>
         <item name="colorOnSecondaryContainer">@color/white</item>
-        <item name="colorTertiaryContainer">#F4BF00</item>
+        <item name="colorTertiaryContainer">#F40000</item>
         <item name="colorOnTertiaryContainer">#08F400</item>
         <item name="colorSurface">#2196F3</item>
-        <item name="colorOnSurface">#0039C8</item>
-        <item name="colorOnSurfaceVariant">#FF0051</item>
+        <item name="colorOnSurface">#FECE00</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
         <item name="colorOutline">#9300EF</item>
 
         <item name="android:statusBarColor">@color/primary</item>
     </style>
 
-    <style name="Theme.NewDemo" parent="Base.Theme.NewDemo" />
+    <style name="Theme.BillionaireDreams" parent="Base.Theme.BillionaireDreams" />
 </resources>

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.NewDemo" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BillionaireDreams" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
@@ -22,5 +22,5 @@
         <item name="android:statusBarColor">@color/primary</item>
     </style>
 
-    <style name="Theme.NewDemo" parent="Base.Theme.NewDemo" />
+    <style name="Theme.BillionaireDreams" parent="Base.Theme.BillionaireDreams" />
 </resources>

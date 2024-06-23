@@ -1,18 +1,42 @@
 package com.nilscreation.billionairedreams;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class SplashActivity extends AppCompatActivity {
+
+    CardView applogo;
+    TextView appname, tagline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+
+        applogo = findViewById(R.id.logo);
+        appname = findViewById(R.id.appname);
+        tagline = findViewById(R.id.tagline);
+
+        applogo.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
+        appname.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom));
+        tagline.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom));
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -24,5 +48,6 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, 2000);
+
     }
 }

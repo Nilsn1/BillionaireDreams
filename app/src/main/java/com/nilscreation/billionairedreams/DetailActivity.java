@@ -2,21 +2,30 @@ package com.nilscreation.billionairedreams;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
@@ -25,10 +34,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class DetailActivity extends AppCompatActivity {
+
     ImageView imageView;
     String mPoster;
     private AdView mAdView;
@@ -37,7 +49,13 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
 
         imageView = findViewById(R.id.photoView);
 
@@ -62,7 +80,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    saveImageToMediaStore();
+                } else {
                     requestPermissions(permission, 80);
                 }
 
@@ -89,6 +109,33 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void saveImageToMediaStore() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Billionaire Dreams");
+
+        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+
+        try {
+            if (uri != null) {
+                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+                Toast.makeText(this, "Image Downloaded successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error Downloading image", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error Downloading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -96,7 +143,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void shareImageandText(Bitmap bitmap) {
-        Uri uri = getmageToShare(bitmap);
+        Uri uri = getImageToShare(bitmap);
         Intent intent = new Intent(Intent.ACTION_SEND);
 
         // putting uri of image to be shared
@@ -116,12 +163,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     // Retrieving the url to share
-    private Uri getmageToShare(Bitmap bitmap) {
+    private Uri getImageToShare(Bitmap bitmap) {
         File imagefolder = new File(getCacheDir(), "images");
         Uri uri = null;
         try {
             imagefolder.mkdirs();
-            File file = new File(imagefolder, "Billionaire_Dreams_.jpg");
+            File file = new File(imagefolder, "Billionaire_Dreams_Quote.jpg");
             FileOutputStream outputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
@@ -138,7 +185,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 80) {
-            if (grantResults[0] == getPackageManager().PERMISSION_GRANTED) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
                 Bitmap bitmap = bitmapDrawable.getBitmap();
@@ -149,12 +196,7 @@ public class DetailActivity extends AppCompatActivity {
                     Uri uri = Uri.parse(mPoster);
                     DownloadManager.Request request = new DownloadManager.Request(uri);
 
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                            .setAllowedOverRoaming(false)
-                            .setTitle("Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg")
-                            .setMimeType("image/jpeg")
-                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                            .setDestinationInExternalPublicDir(DIRECTORY_PICTURES, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle("Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg").setMimeType("image/jpeg").setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED).setDestinationInExternalPublicDir(DIRECTORY_PICTURES, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
 
                     downloadManager.enqueue(request);
 

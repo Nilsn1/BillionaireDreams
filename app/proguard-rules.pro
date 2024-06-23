@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+## Keep Retrofit classes
+#-keep class retrofit2.** { *; }
+#-keepclassmembers class retrofit2.** { *; }
+#
+## Keep Retrofit interfaces that are used as API endpoints
+#-keep,allowobfuscation interface com.nilscreation.billionairedreams.BloggerApiService
+#
+## Keep model classes
+#-keep class com.nilscreation.billionairedreams.model.** { *; }
