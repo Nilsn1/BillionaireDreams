@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 //import com.google.android.gms.ads.AdRequest;
 //import com.google.android.gms.ads.AdView;
@@ -56,6 +57,9 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        TextView marqueeTextView = view.findViewById(R.id.marqueeTextView);
+        marqueeTextView.setSelected(true);
 
         recyclerView = view.findViewById(R.id.recyclerview);
         progressbar = view.findViewById(R.id.progressbar);

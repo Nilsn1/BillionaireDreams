@@ -11,15 +11,17 @@ android {
         applicationId = "com.nilscreation.billionairedreams"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
 //        debug {
 //            isMinifyEnabled = true
@@ -50,5 +52,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.jsoup)
     implementation(libs.glide)
+    implementation("com.google.android.play:app-update:2.1.0")
+
 
 }

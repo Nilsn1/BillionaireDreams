@@ -11,6 +11,10 @@ import android.widget.TextView;
 import android.Manifest;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -26,7 +30,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -34,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView toolbarTitle;
     private static final int NOTIFICATION_PERMISSION_CODE = 100;
+
+    private ActivityResultLauncher activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
             toolbarTitle.setText("Billionaire Dreams");
         }
+
+        inAppUpdate();
 
         loadFragment(new MainFragment());
 
@@ -169,5 +184,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void inAppUpdate() {
+        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
+
+// Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // This example applies an immediate update. To apply a flexible update
+                    // instead, pass in AppUpdateType.FLEXIBLE
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                // Request the update.
+                appUpdateManager.startUpdateFlowForResult(
+                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                        appUpdateInfo,
+                        // an activity result launcher registered via registerForActivityResult
+                        activityResultLauncher,
+                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                        // flexible updates.
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build());
+            }
+        });
+
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        // handle callback
+                        if (result.getResultCode() != RESULT_OK) {
+//                            log("Update flow failed! Result code: " + result.getResultCode());
+                            // If the update is canceled or fails,
+                            // you can request to start the update again.
+                        }
+                    }
+                });
     }
 }

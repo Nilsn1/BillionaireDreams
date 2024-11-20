@@ -49,14 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-
         imageView = findViewById(R.id.photoView);
 
         Bundle bundle = getIntent().getExtras();
@@ -109,20 +102,62 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+//    private void saveImageToMediaStore() {
+//        ContentValues values = new ContentValues();
+//        values.put(MediaStore.Images.Media.DISPLAY_NAME, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
+//        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+//        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Billionaire Dreams");
+//
+//        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+//        Bitmap bitmap = bitmapDrawable.getBitmap();
+//
+//        try {
+//            if (uri != null) {
+//                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+//                if (outputStream != null) {
+//                    outputStream.close();
+//                }
+//                Toast.makeText(this, "Image Downloaded successfully", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(this, "Error Downloading image", Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Toast.makeText(this, "Error Downloading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
     private void saveImageToMediaStore() {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+
+        // Check if the drawable is null
+        if (bitmapDrawable == null) {
+            Toast.makeText(this, "Error: No image to save", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+
+        // Check if the Bitmap is valid
+        if (bitmap == null) {
+            Toast.makeText(this, "Error: Unable to retrieve image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DISPLAY_NAME, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Billionaire Dreams");
 
         Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = bitmapDrawable.getBitmap();
 
         try {
             if (uri != null) {
                 OutputStream outputStream = getContentResolver().openOutputStream(uri);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
                 if (outputStream != null) {
                     outputStream.close();
                 }
@@ -135,6 +170,7 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Error Downloading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -185,18 +221,22 @@ public class DetailActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 80) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+            // Check if the grantResults array is not empty
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
                 Bitmap bitmap = bitmapDrawable.getBitmap();
 
                 try {
-                    DownloadManager downloadManager = null;
-                    downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                     Uri uri = Uri.parse(mPoster);
                     DownloadManager.Request request = new DownloadManager.Request(uri);
 
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle("Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg").setMimeType("image/jpeg").setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED).setDestinationInExternalPublicDir(DIRECTORY_PICTURES, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                            .setAllowedOverRoaming(false)
+                            .setTitle("Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg")
+                            .setMimeType("image/jpeg")
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                            .setDestinationInExternalPublicDir(DIRECTORY_PICTURES, "Billionaire_Dreams_" + System.currentTimeMillis() + ".jpg");
 
                     downloadManager.enqueue(request);
 
@@ -207,9 +247,10 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "Save Failed", Toast.LENGTH_SHORT).show();
                 }
 
+            } else {
+                // Permission was denied
+                Toast.makeText(this, "Permission denied, download canceled", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(DetailActivity.this, "Download cancel", Toast.LENGTH_SHORT).show();
         }
     }
 }

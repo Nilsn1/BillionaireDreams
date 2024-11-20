@@ -6,13 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".MainFragment">
 
+    <TextView
+        android:id="@+id/marqueeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingVertical="4dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="Do not reupload images on social media without permission; use only for sharing or status purposes. Contact us for more."
+        android:textColor="#FF0000"
+        android:fontFamily="@font/rohnroundedheavy"
+        android:textSize="12sp"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
+        android:layout_height="0dp"
+        ads:layout_constraintBottom_toTopOf="@+id/adView"
         ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintTop_toTopOf="parent"
+        ads:layout_constraintTop_toBottomOf="@+id/marqueeTextView"
         tools:listitem="@layout/item" />
 
     <ProgressBar
