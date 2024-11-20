@@ -17,7 +17,7 @@
         android:paddingVertical="4dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="Do not reupload images on social media without permission; use only for sharing or status purposes. Contact us for more."
+        android:text="@string/DisclaimerNote"
         android:textColor="#FF0000"
         android:fontFamily="@font/rohnroundedheavy"
         android:textSize="12sp"

@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.1"
+appUpdate = "2.1.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -18,6 +19,7 @@ jsoup = "1.17.2"
 firebaseMessaging = "24.0.0"
 
 [libraries]
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

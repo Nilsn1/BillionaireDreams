@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.jsoup)
     implementation(libs.glide)
-    implementation("com.google.android.play:app-update:2.1.0")
+    implementation(libs.app.update)
 
 
 }
